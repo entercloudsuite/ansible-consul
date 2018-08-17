@@ -1,6 +1,20 @@
 ---
 
+- name: prerequisite
+  hosts: all
+  gather_facts: false
+  pre_tasks:
+    - name: prerequisite
+      package: name={{ item }}
+      with_items:
+        - iproute
+        - rsyslog
+
 - name: run the main role
   hosts: all
+  gather_facts: true
   roles:
-    - {role: ansible-consul}
+    - role: ansible-consul
+      consul_iface: eth0
+      consul_group_name: all
+      consul_node_role: client

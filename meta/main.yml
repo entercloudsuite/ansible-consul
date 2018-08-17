@@ -15,4 +15,3 @@ galaxy_info:
 dependencies:
   - {role: brianshumate.consul, version: v2.0.6}
   # List your role dependencies here, one per line.
-
