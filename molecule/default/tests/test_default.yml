@@ -1,0 +1,21 @@
+---
+port:
+  tcp6:8500:
+    listening: true
+    ip:
+      - '::'
+service:
+  consul:
+    enabled: true
+    running: true
+user:
+  consul:
+    exists: true
+    groups:
+      - consul
+group:
+  consul:
+    exists: true
+process:
+  consul:
+    running: true
