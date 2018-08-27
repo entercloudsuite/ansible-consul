@@ -18,9 +18,28 @@ The role defines most of its variables in `defaults/main.yml`:
 
 Run with default vars:
 
-    - hosts: all
-      roles:
-        - { role: ansible-consul }
+```
+- name: run the main role
+  hosts: all
+  gather_facts: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python
+  roles:
+    - role: entercloudsuite.consul
+      consul_version: 1.2.2
+      consul_config_validate: "{{ consul_user_home }}/bin/consul validate -config-format=json %s"
+      consul_configs:
+        main:
+          bind_addr: 0.0.0.0
+          client_addr: 0.0.0.0
+          node_name: "{{ ansible_hostname }}"
+          data_dir: "{{ consul_data_dir }}"
+          encrypt: "chohLoix1mec9Wooye3shoh3"
+          enable_syslog: true
+          datacenter: automium
+          server: true
+          ui: true
+```
 
 ## Testing
 
