@@ -14,5 +14,7 @@ galaxy_info:
     - molecule
 
 dependencies:
-  - {role: cmacrae.consul}
+  - src: git+https://github.com/jsecchiero/ansible-consul.git
+    version: 1.0.0
+    name: jsecchiero.consul
   # List your role dependencies here, one per line.
