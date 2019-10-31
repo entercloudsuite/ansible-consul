@@ -1,6 +1,8 @@
+# Ansible Role for deploy Consul
+
 ![Consul](https://www.consul.io/assets/images/mega-nav/logo-consul-c77f6844.svg) <h1>Consul</h1>
-[![Build Status](https://travis-ci.org/cmacrae/ansible-consul.svg?branch=master)](https://travis-ci.org/cmacrae/ansible-consul)  
-A no nonsense Ansible role to deploy and configure [Consul](https://consul.io)
+[![Build Status](https://api.travis-ci.org/entercloudsuite/ansible-consul.svg?branch=master)](https://travis-ci.org/entercloudsuite/ansible-consul)
+[![Galaxy](https://img.shields.io/badge/galaxy-entercloudsuite.consul-blue.svg?style=flat-square)](https://galaxy.ansible.com/entercloudsuite/consul)
 
 ## Features
 ### Configure Consul with YAML
@@ -27,25 +29,19 @@ As seen in the above example, this can be quite powerful, as it allows you to le
 
 The above example configuration shows simple string key/value pairs, but you can of course define any valid type in YAML, such as dictionaries, and lists.  
 If you don't know how to express your Consul's JSON configuration as YAML, see [here for a handy converter](https://www.json2yaml.com/).  
-
-### Multiple configuration file deployments
-As shown in the above example, the `consul_configs` variable has a `main` dict. As you might have guessed; you can define multiple dicts of configuration. These are then deployed to files named after their parent key in the `conf.d` directory.  
-
-### KISS
-Not really sure this should be listed as a feature... but I deem it valuable.  
-Consul, for what it does, is fantastically simple to configure and spin up - as such, it deserves an equally simple Ansible role.  
-The main tasks file is only just over 70 lines, including whitespace. And the main configuration template? 1 line.  
-Keeping this role simple allows it to be very flexible and easy to integrate with anything else you might want to.
-
-### Packer provisioning support
-A very simple, but handy feature of this role is the ability to set `consul_packer_provision` to `true` (`false` by default). When this is `true`, during the Ansible run, it won't start the Consul service. This exists so that you can place values into your configuration that may not be valid, intended to be used when producing machine images of some sort with Packer, intended to be substituted later on by way of some sort of launch configuration/user script/user data.  
+  
 
 ## Requirements
-This role has only been tested on Ubuntu 16.04, but should be expected to work on any Linux distro which runs `systemd` and has an `unzip` package available.
+This role has only been tested on Ubuntu 16.04, but should be expected to work on any Linux distro.
+It requred
+  - `systemd`  
+  - `unzip`  
 
 ## Default Role Variables
 
 ```yaml
+---
+consul_packer_provision: false
 consul_group_name: consul
 consul_group_gid: 3000
 consul_user_name: consul
@@ -53,13 +49,30 @@ consul_user_uid: 3000
 consul_user_home: /opt/consul
 consul_config_dir: "{{ consul_user_home }}/conf.d"
 consul_data_dir: "{{ consul_user_home }}/data"
-consul_version: 0.8.4
+consul_version: 1.6.1
 consul_server: false
 consul_uri: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
 consul_config_src: main.json.j2
+consul_config_validate: "{{ consul_user_home }}/bin/consul validate -config-format=json %s"
+consul_extra_args: []
 consul_service_file:
   src: consul.service.j2
   dest: /etc/systemd/system/consul.service
+consul_service_status: started
+# reloaded
+# restarted
+# started
+# stopped
+
+enable_on_boot: yes
+# yes
+# no
+
+# configure this var for don't run configuration step
+# no_configure
+
+# configure this var for don't run configuration step
+# no_install
 
 consul_config:
   datacenter: dc-1
@@ -70,7 +83,7 @@ consul_config:
 ```
 
 ## Example Playbook
-
+#### Basic Role configuration
 ```yaml
 - hosts: consul_servers
   vars:
@@ -88,9 +101,58 @@ consul_config:
       node_name: master
       server: "{{ consul_server }}"
       ui: true
-
   roles:
-      - cmacrae.consul
+      - entercloudsuite.consul
+```
+#### Don't configure just install
+```yaml
+---
+- name: run the main rolet
+  hosts: all
+  roles:
+    - role: entercloudsuite.consul
+      no_configure: "no_configure"
+      consul_service_status: "stopped"
+      consul_master_token: myToken
+      consul_server: true
+      consul_configs:
+        main:
+          acl_datacenter: pantheon
+          acl_master_token: "{{ consul_master_token | to_uuid }}"
+          bootstrap: true
+          bind_addr: 0.0.0.0
+          client_addr: 0.0.0.0
+          datacenter: pantheon
+          data_dir: "{{ consul_data_dir }}"
+          log_level: INFO
+          node_name: master
+          server: "{{ consul_server }}"
+          ui: true
+```
+#### Don't install just configure
+```yaml
+---
+- name: run the main rolet
+  hosts: all
+  roles:
+    - role: entercloudsuite.consul
+      no_install: "noInstall"
+      consul_service_status: "started"
+      consul_master_token: myToken
+      consul_server: true
+      consul_configs:
+        main:
+          acl_datacenter: pantheon
+          acl_master_token: "{{ consul_master_token | to_uuid }}"
+          bootstrap: true
+          bind_addr: 0.0.0.0
+          client_addr: 0.0.0.0
+          datacenter: pantheon
+          data_dir: "{{ consul_data_dir }}"
+          log_level: INFO
+          node_name: master
+          server: "{{ consul_server }}"
+          ui: true
 ```
 
 ## Testing
@@ -118,9 +180,7 @@ In order to run the role targeting a VM, use the playbook_deploy.yml file for ex
 MIT
 
 ## Author Information
-Created by Calum MacRae
-
-Feel free to:  
-- Contact me: [@calumacrae](https://twitter.com/calumacrae), [calum0macrae@gmail.com](mailto:calum0macrae@gmail.com)  
-- [Raise an issue](https://github.com/cmacrae/ansible-consul/issues)  
-- [Contribute](https://github.com/cmacrae/ansible-consul/pulls)  
+Created by:
+ - Calum MacRae
+ - Jacopo Secchiero
+ - Attilio Greco
