@@ -1,23 +1,21 @@
 ---
+
 language: python
-python: "2.7"
-sudo: false
+python: 2.7
+sudo: required
 
-addons:
-  apt:
-    packages:
-      - python-pip
-      - curl
+services:
+  - docker
 
-install:
-  - pip install ansible
-  - ansible --version
-  - printf '[defaults]\nroles_path=../\nhost_key_checking = False' >ansible.cfg
+# Install requirements
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install python-apt -y
+  - pip install tox-travis
 
+# Test all the scenarios against the Ansible versions defined in the tox.ini file
 script:
-  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
-  - ansible-playbook tests/test.yml -i tests/inventory --connection=local
-  - curl -s --fail http://localhost:8500 &>/dev/null
+  - sudo -E env "PATH=$PATH" tox
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
