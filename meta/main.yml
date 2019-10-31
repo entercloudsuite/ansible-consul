@@ -1,20 +1,15 @@
 ---
 galaxy_info:
-  role_name: consul
-  author: Jacopo Secchiero
-  description: Playbook for consul.
-  company: Enter srl
+  author: cmacrae
+  description: No nonsense role for deploying Consul
   license: MIT
-  min_ansible_version: 2.4
+  min_ansible_version: 2.0
   platforms:
     - name: Ubuntu
-      versions:
-        - xenial
-  galaxy_tags:
-    - molecule
 
-dependencies:
-  - src: git+https://github.com/jsecchiero/ansible-consul.git
-    version: 1.0.0
-    name: jsecchiero.consul
-  # List your role dependencies here, one per line.
+  galaxy_tags:
+    - consul
+    - hashicorp
+    - "service discovery"
+    - monitoring
+    - "k/v store"

@@ -1,9 +1,4 @@
 ---
-port:
-  tcp6:8500:
-    listening: true
-    ip:
-      - '::'
 service:
   consul:
     enabled: true
@@ -19,3 +14,8 @@ group:
 process:
   consul:
     running: true
+http:
+  http://localhost:8500/ui/:
+    status: 200
+    allow-insecure: false
+    timeout: 1000

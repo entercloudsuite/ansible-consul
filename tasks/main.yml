@@ -1,2 +1,23 @@
 ---
-# tasks
+- import_tasks: prerequisite.yml
+  when:
+    no_install is not defined
+
+- import_tasks: install.yml
+  when:
+    no_install is not defined
+
+- debug:
+    var: no_configure
+
+- include: config.yml
+  with_dict: "{{  consul_configs  }}"
+  when:
+    - no_configure is not defined
+  tags: config
+
+- name: Ensure the Consul service is "{{ consul_service_status }}"
+  service:
+    name: consul
+    state: "{{ consul_service_status }}"
+  when: not consul_packer_provision

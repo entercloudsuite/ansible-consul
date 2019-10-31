@@ -1,43 +1,27 @@
 ---
-
-- name: prerequisite local
-  hosts: all
-  vars:
-    ansible_python_interpreter: /usr/bin/python
-  tasks:
-    - name: prerequisite local
-      local_action: package name=ca-certificates state=latest
-
-- name: prerequisite
-  hosts: all
-  vars:
-    ansible_python_interpreter: /usr/bin/python
-  pre_tasks:
-    - name: prerequisite
-      package: name={{ item }} state=latest
-      with_items:
-        - iproute
-        - rsyslog
-        - ca-certificates
-        - sudo
-
 - name: run the main role
+  become: true
+  become_method: su
+  become_user: root
   hosts: all
-  gather_facts: true
-  vars:
-    ansible_python_interpreter: /usr/bin/python
   roles:
     - role: ansible-consul
-      consul_version: 1.2.2
-      consul_config_validate: "{{ consul_user_home }}/bin/consul validate -config-format=json %s"
+      # no_configure: "no_configure"
+      # consul_service_status: "stopped"
+      # no_install: "noInstall"
+      consul_service_status: "started"
+      consul_master_token: myToken
+      consul_server: true
       consul_configs:
         main:
+          acl_datacenter: pantheon
+          acl_master_token: "{{ consul_master_token | to_uuid }}"
+          bootstrap: true
           bind_addr: 0.0.0.0
           client_addr: 0.0.0.0
-          node_name: "{{ ansible_hostname }}"
+          datacenter: pantheon
           data_dir: "{{ consul_data_dir }}"
-          encrypt: "K8n07GA/ZoANSmJ5zkvgOg=="
-          enable_syslog: true
-          datacenter: automium
-          server: true
+          log_level: INFO
+          node_name: master
+          server: "{{ consul_server }}"
           ui: true

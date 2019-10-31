@@ -1,2 +1,36 @@
 ---
-# defaults vars
+consul_packer_provision: false
+consul_group_name: consul
+consul_group_gid: 3000
+consul_user_name: consul
+consul_user_uid: 3000
+consul_user_home: /opt/consul
+consul_config_dir: "{{ consul_user_home }}/conf.d"
+consul_data_dir: "{{ consul_user_home }}/data"
+consul_version: 1.6.1
+consul_server: false
+consul_uri: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
+consul_config_src: main.json.j2
+consul_config_validate: "{{ consul_user_home }}/bin/consul validate -config-format=json %s"
+consul_extra_args: []
+consul_service_file:
+  src: consul.service.j2
+  dest: /etc/systemd/system/consul.service
+consul_service_status: started
+# reloaded
+# restarted
+# started
+# stopped
+enable_on_boot: yes
+# yes
+# no
+# configure this var for don't run configuration step
+# no_configure
+# no_install
+
+consul_config:
+  datacenter: dc-1
+  data_dir: "{{ consul_data_dir }}"
+  log_level: INFO
+  node_name: node-1
+  server: "{{ consul_server }}"

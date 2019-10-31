@@ -1,4 +1,0 @@
----
-- src: https://github.com/jsecchiero/ansible-consul
-  name: jsecchiero.consul
-  versione: 1.0.0

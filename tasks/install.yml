@@ -1,0 +1,56 @@
+---
+- name: install | Ensure Consul service group exists
+  group:
+    name: "{{ consul_group_name }}"
+    gid: "{{ consul_group_gid }}"
+    system: true
+    state: present
+
+- name: install | Ensure Consul service user exists
+  user:
+    name: "{{ consul_user_name }}"
+    uid: "{{ consul_user_uid }}"
+    group: "{{ consul_group_name }}"
+    home: "{{ consul_user_home }}"
+    system: true
+    state: present
+
+- name: install | Ensure Consul directory structure is configured
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ consul_user_name }}"
+    group: "{{ consul_group_name }}"
+  with_items:
+    - "{{ consul_config_dir }}"
+    - "{{ consul_data_dir }}"
+    - "{{ consul_user_home }}/bin"
+
+- name: install | check if consul binary exist
+  stat:
+    path: "{{ consul_user_home }}/bin/consul"
+  register: consul_bin
+
+- name: install | Download Consul binary
+  unarchive:
+    src: "{{ consul_uri }}"
+    dest: "{{ consul_user_home }}/bin"
+    remote_src: true
+  become: true
+  become_user: "{{ consul_user_name }}"
+  when: not consul_bin.stat.exists
+
+- name: install | Deploy Consul systemd unit
+  template:
+    src: "{{ consul_service_file.src }}"
+    dest: "{{ consul_service_file.dest }}"
+    owner: root
+    group: root
+    mode: 0600
+  notify:
+    - Daemon Reload Consul
+
+- name: install | enabled consul on boot ("{{ enable_on_boot }}")
+  service:
+    name: consul
+    enabled: "{{ enable_on_boot }}"

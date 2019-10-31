@@ -16,9 +16,6 @@ provisioner:
     create: create.yml
     prepare: prepare.yml
     destroy: destroy.yml
-  lint:
-    name: ansible-lint
-    enabled: False
 scenario:
   name: default
 verifier:

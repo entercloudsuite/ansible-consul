@@ -1,2 +1,17 @@
 ---
-# handlers file
+- name: Reload Consul service
+  service:
+    name: consul
+    state: reloaded
+  when: not consul_packer_provision
+
+- name: Restart Consul service
+  service:
+    name: consul
+    state: restarted
+  when: not consul_packer_provision
+
+- name: Daemon Reload Consul
+  systemd:
+    name: consul
+    daemon_reload: true
