@@ -1,9 +1,9 @@
 ---
 consul_packer_provision: false
 consul_group_name: consul
-consul_group_gid: 3000
+# consul_group_gid: 3000
 consul_user_name: consul
-consul_user_uid: 3000
+# consul_user_uid: 3000
 consul_user_home: /opt/consul
 consul_config_dir: "{{ consul_user_home }}/conf.d"
 consul_data_dir: "{{ consul_user_home }}/data"
