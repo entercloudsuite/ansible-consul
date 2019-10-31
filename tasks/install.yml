@@ -36,8 +36,8 @@
     src: "{{ consul_uri }}"
     dest: "{{ consul_user_home }}/bin"
     remote_src: true
-  become: true
-  become_user: "{{ consul_user_name }}"
+    owner: "{{ consul_user_name }}"
+    group: "{{ consul_group_name }}"
   when: not consul_bin.stat.exists
 
 - name: install | Deploy Consul systemd unit
