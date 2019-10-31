@@ -111,7 +111,8 @@ consul_config:
   hosts: all
   roles:
     - role: entercloudsuite.consul
-      no_configure: "no_configure"
+      configure: false
+      install: true
       consul_service_status: "stopped"
       consul_master_token: myToken
       consul_server: true
@@ -136,7 +137,8 @@ consul_config:
   hosts: all
   roles:
     - role: entercloudsuite.consul
-      no_install: "noInstall"
+      configure: true
+      install: false
       consul_service_status: "started"
       consul_master_token: myToken
       consul_server: true
