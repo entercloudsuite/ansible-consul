@@ -2,6 +2,7 @@
 - name: install | Ensure Consul service group exists
   group:
     name: "{{ consul_group_name }}"
+    gid: "{{ consul_group_gid }}"
     system: true
     state: present
 
@@ -9,6 +10,7 @@
   user:
     name: "{{ consul_user_name }}"
     group: "{{ consul_group_name }}"
+    uid: "{{ consul_user_uid }}"
     home: "{{ consul_user_home }}"
     system: true
     state: present
