@@ -7,9 +7,6 @@
   when:
     install
 
-- debug:
-    var: no_configure
-
 - include: config.yml
   with_dict: "{{  consul_configs  }}"
   when:
