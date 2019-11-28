@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: automium.consul
+  role_name: consul
   author: Automium team
   description: Role for deploying Consul
   license: MIT
@@ -10,6 +10,5 @@ galaxy_info:
   galaxy_tags:
     - consul
     - hashicorp
-    - "service discovery"
-    - monitoring
-    - "k/v store"
+    - discovery
+    - dns
