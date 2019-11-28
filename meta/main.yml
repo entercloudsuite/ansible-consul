@@ -1,12 +1,12 @@
 ---
 galaxy_info:
-  author: cmacrae
-  description: No nonsense role for deploying Consul
+  role_name
+  author: Automium team
+  description: Role for deploying Consul
   license: MIT
   min_ansible_version: 2.0
   platforms:
     - name: Ubuntu
-
   galaxy_tags:
     - consul
     - hashicorp
