@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name
+  role_name: automium.consul
   author: Automium team
   description: Role for deploying Consul
   license: MIT
