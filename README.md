@@ -1,8 +1,8 @@
 # Ansible Role for deploy Consul
 
 ![Consul](https://www.consul.io/assets/images/mega-nav/logo-consul-c77f6844.svg) <h1>Consul</h1>
-[![Build Status](https://api.travis-ci.org/entercloudsuite/ansible-consul.svg?branch=master)](https://travis-ci.org/entercloudsuite/ansible-consul)
-[![Galaxy](https://img.shields.io/badge/galaxy-entercloudsuite.consul-blue.svg?style=flat-square)](https://galaxy.ansible.com/entercloudsuite/consul)
+[![Build Status](https://api.travis-ci.org/automium/ansible-consul.svg?branch=master)](https://travis-ci.org/entercloudsuite/ansible-consul)
+[![Galaxy](https://img.shields.io/badge/galaxy-automium.consul-blue.svg?style=flat-square)](https://galaxy.ansible.com/automium/consul)
 
 ## Features
 ### Configure Consul with YAML
