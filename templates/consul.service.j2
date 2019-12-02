@@ -13,7 +13,7 @@ Environment=GOMAXPROCS=2
 ExecStartPre=/usr/bin/install -d /run/consul -o {{ consul_user_name }} -g {{ consul_group_name }}
 ExecStartPre=/usr/bin/touch /run/consul/consul.pid
 ExecStartPre=/bin/chown {{ consul_user_name }}:{{ consul_group_name }} /run/consul/consul.pid 
-ExecStart={{ consul_user_home }}/bin/consul agent {% if consul_extra_args > 0 %}{% for arg in consul_extra_args %}{{arg}} {% endfor %}{% endif %}-pid-file=/run/consul/consul.pid -config-dir={{ consul_config_dir }}
+ExecStart={{ consul_user_home }}/bin/consul agent {% if consul_extra_args|length > 0 %}{% for arg in consul_extra_args %}{{arg}} {% endfor %}{% endif %}-pid-file=/run/consul/consul.pid -config-dir={{ consul_config_dir }}
 ExecStopPost=/usr/bin/[ -f "/run/consul/consul.pid" /usr/bin/] && /usr/bin/rm -f /run/consul/consul.pid
 ExecReload=/bin/kill -s HUP $MAINPID
 KillSignal=SIGINT
