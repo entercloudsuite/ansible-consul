@@ -6,7 +6,24 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: instance-1
+  - name: consul-server-0
+    groups:
+      - server
+  - name: consul-server-1
+    groups:
+      - server
+  - name: consul-server-2
+    groups:
+      - server
+  - name: client-0
+    groups:
+      - client
+  - name: client-1
+    groups:
+      - client
+  - name: client-2
+    groups:
+      - client
 provisioner:
   name: ansible
   options:
