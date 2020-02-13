@@ -1,3 +1,4 @@
+---
 - name: server | Deploy Consul systemd unit
   template:
     src: "{{ consul_service_file.src }}"
