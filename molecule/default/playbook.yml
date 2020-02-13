@@ -1,24 +1,52 @@
 ---
-- name: run the main rolet
-  hosts: all
+- name: run role for server
+  hosts: server
   roles:
     - role: ansible-consul
-      # no_configure: "no_configure"
-      # consul_service_status: "stopped"
-      # no_install: "noInstall"
+      configure: true
+      install: true
       consul_service_status: "started"
-      consul_master_token: myToken
-      consul_server: true
+      consul_version: 1.6.3
       consul_configs:
         main:
-          acl_datacenter: pantheon
-          acl_master_token: "{{ consul_master_token | to_uuid }}"
-          bootstrap: true
-          bind_addr: 0.0.0.0
+          bind_addr: "{{ ansible_default_ipv4['address'] }}"
           client_addr: 0.0.0.0
-          datacenter: pantheon
+          node_name: "{{ ansible_hostname }}"
           data_dir: "{{ consul_data_dir }}"
-          log_level: INFO
-          node_name: master
-          server: "{{ consul_server }}"
+          datacenter: "pantheon"
+          enable_syslog: true
+          server: true
           ui: true
+          enable_script_checks: true
+          rejoin_after_leave: true
+          retry_join: "{{ groups['server'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | list }}"
+          ports:
+            dns: 53
+          dns_config:
+            udp_answer_limit: 64
+          bootstrap_expect: 3
+          recursors:
+            - 1.1.1.1
+            - 8.8.8.8
+
+- name: run role for client
+  hosts: client
+  roles:
+    - role: ansible-consul
+      configure: true
+      install: true
+      consul_service_status: "started"
+      consul_version: 1.6.3
+      consul_configs:
+        main:
+          bind_addr: "{{ ansible_default_ipv4['address'] }}"
+          client_addr: 0.0.0.0
+          node_name: "{{ ansible_hostname }}"
+          data_dir: "{{ consul_data_dir }}"
+          datacenter: "pantheon"
+          enable_syslog: true
+          server: false
+          ui: true
+          enable_script_checks: true
+          rejoin_after_leave: true
+          retry_join: "{{ groups['server'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | list }}"

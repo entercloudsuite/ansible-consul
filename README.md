@@ -49,7 +49,9 @@ consul_user_uid: 3000
 consul_user_home: /opt/consul
 consul_config_dir: "{{ consul_user_home }}/conf.d"
 consul_data_dir: "{{ consul_user_home }}/data"
-consul_version: 1.6.1
+consul_version: 1.6.3
+# if consul is configure to be a server systemd set cap_net_bind_service for bind port 53
+consul_cap_net_bind_service: "{{ consul_configs.main.server | default('false') }}"
 consul_server: false
 consul_uri: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
 consul_config_src: main.json.j2
@@ -83,6 +85,7 @@ consul_config:
 ```
 
 ## Example Playbook
+
 #### Basic Role configuration
 ```yaml
 - hosts: consul_servers
@@ -157,6 +160,59 @@ consul_config:
           ui: true
 ```
 
+# Consul Agent configurations
+Agent example configurations, it join to server in groups['server']
+
+```yaml
+    - role: ansible-consul
+      configure: true
+      install: true
+      consul_service_status: "started"
+      consul_version: 1.6.3
+      consul_configs:
+        main:
+          bind_addr: "{{ ansible_default_ipv4['address'] }}"
+          client_addr: 0.0.0.0
+          node_name: "{{ ansible_hostname }}"
+          data_dir: "{{ consul_data_dir }}"
+          datacenter: "pantheon"
+          enable_syslog: true
+          server: false
+          ui: true
+          enable_script_checks: true
+          rejoin_after_leave: true
+          retry_join: "{{ groups['server'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | list }}"
+```
+# Consul Server example
+Server example configurations, host in groups['server'] create a new consul cluster.
+```yaml
+    - role: ansible-consul
+      configure: true
+      install: true
+      consul_service_status: "started"
+      consul_version: 1.6.3
+      consul_configs:
+        main:
+          bind_addr: "{{ ansible_default_ipv4['address'] }}"
+          client_addr: 0.0.0.0
+          node_name: "{{ ansible_hostname }}"
+          data_dir: "{{ consul_data_dir }}"
+          datacenter: "pantheon"
+          enable_syslog: true
+          server: true
+          ui: true
+          enable_script_checks: true
+          rejoin_after_leave: true
+          retry_join: "{{ groups['server'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | list }}"
+          ports:
+            dns: 53
+          dns_config:
+            udp_answer_limit: 64
+          bootstrap_expect: "{{ groups['server'] | length | int }}"
+          recursors:
+            - 1.1.1.1
+            - 8.8.8.8
+```
 ## Testing
 
 Tests are performed using [Molecule](http://molecule.readthedocs.org/en/latest/).

@@ -10,6 +10,9 @@ Group={{ consul_group_name }}
 PIDFile=/run/consul/consul.pid
 Restart=on-failure
 Environment=GOMAXPROCS=2
+{% if consul_cap_net_bind_service %}
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+{% endif %}
 ExecStartPre=/usr/bin/install -d /run/consul -o {{ consul_user_name }} -g {{ consul_group_name }}
 ExecStartPre=/usr/bin/touch /run/consul/consul.pid
 ExecStartPre=/bin/chown {{ consul_user_name }}:{{ consul_group_name }} /run/consul/consul.pid 

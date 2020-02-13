@@ -9,6 +9,7 @@ consul_config_dir: "{{ consul_user_home }}/conf.d"
 consul_data_dir: "{{ consul_user_home }}/data"
 consul_version: 1.6.1
 consul_server: false
+consul_cap_net_bind_service: "{{ consul_configs.main.server | default('false') }}"
 consul_uri: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
 consul_config_src: main.json.j2
 consul_config_validate: "{{ consul_user_home }}/bin/consul validate -config-format=json %s"
