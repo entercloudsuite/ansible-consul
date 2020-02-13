@@ -2,7 +2,7 @@
 version: '3'
 services:
   molecule:
-    image: fminzoni/molecule
+    image: automium/molecule:2.22-bionic
     volumes:
       - .:/root/src/ansible-consul
       - /var/run/docker.sock:/var/run/docker.sock

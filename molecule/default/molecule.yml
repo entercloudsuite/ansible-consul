@@ -3,8 +3,10 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
-  name: yamllint
+verifier:
+  name: goss
+  lint:
+    name: yamllint
 platforms:
   - name: consul-server-0
     groups:
@@ -35,5 +37,3 @@ provisioner:
     destroy: destroy.yml
 scenario:
   name: default
-verifier:
-  name: goss
