@@ -9,6 +9,7 @@
   gather_facts: true
   tasks:
   - name: install basetools
-    package:
-      name: [vim, ca-certificates, htop, unzip, curl, iproute]
+    apt:
+      name: [vim, ca-certificates, htop, unzip, curl, iproute2]
+      update_cache: yes
       state: present
