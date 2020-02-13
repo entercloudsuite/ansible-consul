@@ -1,0 +1,16 @@
+- name: server | Deploy Consul systemd unit
+  template:
+    src: "{{ consul_service_file.src }}"
+    dest: "{{ consul_service_file.dest }}"
+    owner: root
+    group: root
+    mode: 0600
+  notify:
+    - Daemon Reload Consul
+
+- name: server | stop systemd.resolver
+  systemd:
+    name: systemd-resolved.service
+    state: stopped
+    daemon_reload: yes
+    enabled: no

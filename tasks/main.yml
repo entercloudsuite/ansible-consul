@@ -7,6 +7,10 @@
   when:
     install
 
+- import_tasks: server.yml
+  when:
+    consul_configs.main.server
+
 - include: config.yml
   with_dict: "{{  consul_configs  }}"
   when:
