@@ -7,7 +7,7 @@ consul_user_uid: 3000
 consul_user_home: /opt/consul
 consul_config_dir: "{{ consul_user_home }}/conf.d"
 consul_data_dir: "{{ consul_user_home }}/data"
-consul_version: 1.6.1
+consul_version: 1.6.3
 consul_server: false
 consul_cap_net_bind_service: "{{ consul_configs.main.server | default('false') }}"
 consul_uri: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
