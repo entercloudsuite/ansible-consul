@@ -8,7 +8,8 @@ PermissionsStartOnly=true
 User={{ consul_user_name }}
 Group={{ consul_group_name }}
 PIDFile=/run/consul/consul.pid
-Restart=on-failure
+Restart=always
+RestartSec=5
 Environment=GOMAXPROCS=2
 {% if consul_cap_net_bind_service %}
 AmbientCapabilities=CAP_NET_BIND_SERVICE
@@ -20,7 +21,7 @@ ExecStart={{ consul_user_home }}/bin/consul agent {% if consul_extra_args|length
 ExecStopPost=/usr/bin/[ -f "/run/consul/consul.pid" /usr/bin/] && /usr/bin/rm -f /run/consul/consul.pid
 ExecReload=/bin/kill -s HUP $MAINPID
 KillSignal=SIGINT
-TimeoutStopSec=5
+TimeoutStopSec=15
 
 [Install]
 WantedBy=multi-user.target
